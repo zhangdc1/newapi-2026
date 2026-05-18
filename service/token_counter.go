@@ -398,6 +398,11 @@ func CountTextToken(text string, model string) int {
 	if text == "" {
 		return 0
 	}
+	if IsDeepSeekModel(model) {
+		if tokens, ok := CountDeepSeekTextToken(text); ok {
+			return tokens
+		}
+	}
 	if common.IsOpenAITextModel(model) {
 		tokenEncoder := getTokenEncoder(model)
 		return getTokenNum(tokenEncoder, text)
