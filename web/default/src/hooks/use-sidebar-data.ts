@@ -26,6 +26,7 @@ import {
   Users,
   Ticket,
   User,
+  Share2,
   Command,
   Radio,
   FlaskConical,
@@ -110,6 +111,11 @@ export function useSidebarData(): SidebarData {
             icon: Wallet,
           },
           {
+            title: t('Distribution Center'),
+            url: '/distribution',
+            icon: Share2,
+          },
+          {
             title: t('Profile'),
             url: '/profile',
             icon: User,
@@ -144,6 +150,11 @@ export function useSidebarData(): SidebarData {
             title: t('Subscription Management'),
             url: '/subscriptions',
             icon: CreditCard,
+          },
+          {
+            title: t('Distribution Management'),
+            url: '/distribution-admin',
+            icon: Share2,
           },
           {
             title: t('System Settings'),

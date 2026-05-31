@@ -197,6 +197,7 @@ func Register(c *gin.Context) {
 		common.ApiErrorI18n(c, i18n.MsgUserRegisterFailed)
 		return
 	}
+	model.SyncUserReferral(insertedUser.Id, "register")
 	// 生成默认令牌
 	if constant.GenerateDefaultToken {
 		key, err := common.GenerateKey()
@@ -939,6 +940,13 @@ func ManageUser(c *gin.Context) {
 				common.ApiError(c, err)
 				return
 			}
+			model.GrantCommissionForBalanceIncrease(model.DistributionBalanceIncrease{
+				UserId:       user.Id,
+				Amount:       req.Value,
+				Source:       "admin_add_quota",
+				SourceId:     fmt.Sprintf("manage-%d-%d-%d", adminId, user.Id, common.GetTimestamp()),
+				AdminTrigger: true,
+			})
 			model.RecordLogWithAdminInfo(user.Id, model.LogTypeManage,
 				fmt.Sprintf("管理员增加用户额度 %s", logger.LogQuota(req.Value)), adminInfo)
 		case "subtract":
@@ -1113,6 +1121,13 @@ func TopUp(c *gin.Context) {
 		common.ApiError(c, err)
 		return
 	}
+	model.GrantCommissionForBalanceIncrease(model.DistributionBalanceIncrease{
+		UserId:     id,
+		Amount:     quota,
+		Source:     "redeem_code",
+		SourceId:   req.Key,
+		TempDistId: c.Query("dist_id"),
+	})
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"message": "",

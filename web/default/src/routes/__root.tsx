@@ -39,7 +39,8 @@ function RootComponent() {
   useSystemConfig({ autoLoad: true })
 
   useEffect(() => {
-    const aff = new URLSearchParams(window.location.search).get('aff')?.trim()
+    const params = new URLSearchParams(window.location.search)
+    const aff = (params.get('dist_id') || params.get('aff'))?.trim()
     if (aff) {
       saveAffiliateCode(aff)
     }
